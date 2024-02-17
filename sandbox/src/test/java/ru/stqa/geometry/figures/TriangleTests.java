@@ -21,4 +21,24 @@ public class TriangleTests {
 
         Assertions.assertEquals(84, result);
     }
+
+    @Test
+    void testNotPossibleToCreateTriangleWithNegativeSide() {
+        try {
+            new Triangle(12, 14, -15);
+            Assertions.fail();
+        } catch (IllegalArgumentException exception) {
+            //OK
+        }
+    }
+
+    @Test
+    void testNotPossibleToCreateTriangleWithIncorrectSumOfTwoSides() {
+        try {
+            new Triangle(1, 15, 10);
+            Assertions.fail();
+        } catch (IllegalArgumentException exception) {
+            //OK
+        }
+    }
 }
