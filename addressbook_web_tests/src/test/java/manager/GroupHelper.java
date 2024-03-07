@@ -7,18 +7,6 @@ public class GroupHelper extends HelperBase {
 
     public GroupHelper(ApplicationManager manager) {
         super(manager);
-
-    }
-
-    public void openGroupsPage() {
-        if (!manager.isElementPresent(By.name("new"))) {
-            click(By.linkText("groups"));
-        }
-    }
-
-    public boolean isGroupPresent() {
-        openGroupsPage();
-        return manager.isElementPresent(By.name("selected[]"));
     }
 
     public void createGroup(GroupData group) {
@@ -29,14 +17,6 @@ public class GroupHelper extends HelperBase {
         returnToGroupsPage();
     }
 
-    private void submitGroupCreation() {
-        click(By.name("submit"));
-    }
-
-    private void initGroupCreation() {
-        click(By.name("new"));
-    }
-
     public void removeGroup() {
         openGroupsPage();
         selectGroup();
@@ -44,8 +24,10 @@ public class GroupHelper extends HelperBase {
         returnToGroupsPage();
     }
 
-    private void removeSelectedGroup() {
-        click(By.name("delete"));
+    private void fillGroupForm(GroupData group) {
+        type(By.name("group_name"), group.name());
+        type(By.name("group_header"), group.header());
+        type(By.name("group_footer"), group.footer());
     }
 
     public void modifyGroup(GroupData modifiedGroup) {
@@ -65,10 +47,8 @@ public class GroupHelper extends HelperBase {
         click(By.name("update"));
     }
 
-    private void fillGroupForm(GroupData group) {
-        type(By.name("group_name"), group.name());
-        type(By.name("group_header"), group.header());
-        type(By.name("group_footer"), group.footer());
+    private void removeSelectedGroup() {
+        click(By.name("delete"));
     }
 
     private void initGroupModification() {
@@ -77,5 +57,24 @@ public class GroupHelper extends HelperBase {
 
     private void selectGroup() {
         click(By.name("selected[]"));
+    }
+
+    private void submitGroupCreation() {
+        click(By.name("submit"));
+    }
+
+    private void initGroupCreation() {
+        click(By.name("new"));
+    }
+
+    public void openGroupsPage() {
+        if (!manager.isElementPresent(By.name("new"))) {
+            click(By.linkText("groups"));
+        }
+    }
+
+    public boolean isGroupPresent() {
+        openGroupsPage();
+        return manager.isElementPresent(By.name("selected[]"));
     }
 }

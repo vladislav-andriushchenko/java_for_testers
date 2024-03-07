@@ -7,26 +7,20 @@ public class ContactHelper extends HelperBase {
 
     public ContactHelper(ApplicationManager manager) {
         super(manager);
-
-    }
-
-    public void openContactPage() {
-        click(By.linkText("add new"));
     }
 
     public void createAddressBook(ContactData contact) {
-        openContactPage();
+        openContactPageCreation();
         fillContactForm(contact);
         submitContactCreation();
-        returnToHomePage();
+        openHomePage();
     }
 
-    private void returnToHomePage() {
-        click(By.linkText("home page"));
-    }
-
-    private void submitContactCreation() {
-        click(By.xpath("(//input[@name=\'submit\'])[2]"));
+    public void removeContact() {
+        openHomePage();
+        selectContact();
+        removeSelectedContact();
+        openHomePage();
     }
 
     private void fillContactForm(ContactData contact) {
@@ -37,24 +31,20 @@ public class ContactHelper extends HelperBase {
         type(By.name("email"), contact.email());
     }
 
-    public void removeContact() {
-        openContactPage();
-        selectContact();
-        removeSelectedContact();
-        returnToHomePage();
+    private void openHomePage() {click(By.linkText("home"));}
+
+    private void submitContactCreation() {
+        click(By.xpath("(//input[@name=\'submit\'])[2]"));
     }
 
-    private void removeSelectedContact() {
+    private void removeSelectedContact() {click(By.xpath("//input[@value=\'Delete\']"));}
 
-    }
+    private void selectContact() {click(By.name("selected[]"));}
 
-    private void selectContact() {
-        click(By.name("selected[]"));
-    }
-
+    public void openContactPageCreation() {click(By.linkText("add new"));}
 
     public boolean isContactPresent() {
-        openContactPage();
+        openHomePage();
         return manager.isElementPresent(By.name("selected[]"));
     }
 }
