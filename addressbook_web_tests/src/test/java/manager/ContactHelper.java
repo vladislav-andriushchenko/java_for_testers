@@ -3,23 +3,26 @@ package manager;
 import model.ContactData;
 import org.openqa.selenium.By;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ContactHelper extends HelperBase {
 
     public ContactHelper(ApplicationManager manager) {
         super(manager);
     }
 
-    public void createAddressBook(ContactData contact) {
+    public void createContact(ContactData contact) {
         openContactPageCreation();
         fillContactForm(contact);
         submitContactCreation();
         openHomePage();
     }
 
-    public void removeContact() {
+    public void removeContact(ContactData contact) {
         openHomePage();
-        selectContact();
-        removeSelectedContact();
+        selectContact(contact);
+        removeSelectedContacts();
         openHomePage();
     }
 
@@ -31,20 +34,74 @@ public class ContactHelper extends HelperBase {
         type(By.name("email"), contact.email());
     }
 
-    private void openHomePage() {click(By.linkText("home"));}
-
-    private void submitContactCreation() {
-        click(By.xpath("(//input[@name=\'submit\'])[2]"));
+    public void modifyContact(ContactData contact, ContactData modifiedContact) {
+        openHomePage();
+        selectInitialContact(contact);
+        fillContactForm(modifiedContact);
+        initContactModification();
+        openHomePage();
     }
 
-    private void removeSelectedContact() {click(By.xpath("//input[@value=\'Delete\']"));}
+    private void initContactModification() {
+        click(By.xpath("(//input[@name=\"update\"])[2]"));
+    }
 
-    private void selectContact() {click(By.name("selected[]"));}
+    private void selectInitialContact(ContactData contact) {
+        click(By.xpath(String.format("//a[contains(@href, \"%s\")]//*[@title=\"Edit\"]", contact.id())));
+    }
 
-    public void openContactPageCreation() {click(By.linkText("add new"));}
+    private void openHomePage() {
+        click(By.linkText("home"));
+    }
 
-    public boolean isContactPresent() {
+    private void submitContactCreation() {
+        click(By.xpath("(//input[@name=\"submit\"])[2]"));
+    }
+
+    private void removeSelectedContacts() {
+        click(By.xpath("//input[@value=\"Delete\"]"));
+    }
+
+    private void selectContact(ContactData contact) {
+        click(By.cssSelector(String.format("input[value='%s']", contact.id())));
+    }
+
+    public void openContactPageCreation() {
+        click(By.linkText("add new"));
+    }
+
+    public int getCount() {
         openHomePage();
-        return manager.isElementPresent(By.name("selected[]"));
+        return manager.driver.findElements(By.name("selected[]")).size();
+    }
+
+    public void removeAllContacts() {
+        openHomePage();
+        selectAllContacts();
+        removeSelectedContacts();
+    }
+
+    private void selectAllContacts() {
+        var checkboxes = manager.driver.findElements(By.name("selected[]"));
+        for (var checkbox : checkboxes) {
+            checkbox.click();
+        }
+    }
+
+    public List<ContactData> getList() {
+        openHomePage();
+        var contacts = new ArrayList<ContactData>();
+        var entries = manager.driver.findElements(By.cssSelector("[id=\"maintable\"] tr[name=\"entry\"]"));
+        for (var entry : entries) {
+            var firstName = entry.findElement(By.cssSelector("td:nth-child(3)"));
+            var lastName = entry.findElement(By.cssSelector("td:nth-child(2)"));
+            var checkbox = entry.findElement(By.name("selected[]"));
+            var id = checkbox.getAttribute("id");
+            contacts.add(new ContactData()
+                    .withId(id)
+                    .withFirstName(firstName.getText())
+                    .withLastName(lastName.getText()));
+        }
+        return contacts;
     }
 }
