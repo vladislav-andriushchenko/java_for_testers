@@ -6,6 +6,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class AddressBookCreationTests extends TestBase {
@@ -17,26 +18,31 @@ public class AddressBookCreationTests extends TestBase {
                 for (var address : List.of("", "address")) {
                     for (var phone : List.of("", "14882280")) {
                         for (var email : List.of("", "test@test.test")) {
-                            result.add(new ContactData(firstName, lastName, address, phone, email));
+                            result.add(new ContactData()
+                                    .withFirstName(firstName)
+                                    .withLastName(lastName)
+                                    .withAddress(address)
+                                    .withPhone(phone)
+                                    .withEmail(email));
                         }
                     }
                 }
             }
         }
         for (int i = 0; i < 5; i++) {
-            result.add(new ContactData(
-                    randomString(i + 5),
-                    randomString(i + 5),
-                    randomString(i + 5),
-                    randomString(i + 5),
-                    randomString(i + 5)));
+            result.add(new ContactData()
+                    .withFirstName(randomString(i + 5))
+                    .withLastName(randomString(i + 5))
+                    .withAddress(randomString(i + 5))
+                    .withPhone(randomString(i + 5))
+                    .withEmail(randomString(i + 5)));
         }
         return result;
     }
 
     public static List<ContactData> negativeContactProvider() {
         var result = new ArrayList<ContactData>(List.of(
-                new ContactData("group name'", "", "", "", "")
+                new ContactData("", "First Name'", "Last Name", "", "", "")
         ));
         return result;
     }
@@ -44,18 +50,28 @@ public class AddressBookCreationTests extends TestBase {
     @ParameterizedTest
     @MethodSource("contactProvider")
     public void canCreateMultipleContacts(ContactData contact) {
-        int contactCount = app.contacts().getCount();
+        var oldContacts = app.contacts().getList();
         app.contacts().createContact(contact);
-        int newContactCount = app.contacts().getCount();
-        Assertions.assertEquals(contactCount + 1, newContactCount);
+        var newContacts = app.contacts().getList();
+        Comparator<ContactData> compareById = (o1, o2) -> {
+            return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
+        };
+        newContacts.sort(compareById);
+        var expectedList = new ArrayList<>(oldContacts);
+        expectedList.add(contact.withId(newContacts.get(newContacts.size() - 1).id())
+                .withPhone("")
+                .withAddress("")
+                .withEmail(""));
+        expectedList.sort(compareById);
+        Assertions.assertEquals(newContacts, expectedList);
     }
 
     @ParameterizedTest
     @MethodSource("negativeContactProvider")
     public void cannotCreateContacts(ContactData contact) {
-        int contactCount = app.contacts().getCount();
+        var oldContacts = app.contacts().getList();
         app.contacts().createContact(contact);
-        int newContactCount = app.contacts().getCount();
-        Assertions.assertEquals(contactCount, newContactCount);
+        var newContacts = app.contacts().getList();
+        Assertions.assertEquals(newContacts, oldContacts);
     }
 }
