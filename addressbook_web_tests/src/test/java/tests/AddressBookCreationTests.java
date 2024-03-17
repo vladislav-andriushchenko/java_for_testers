@@ -2,6 +2,7 @@ package tests;
 
 import model.ContactData;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -23,7 +24,9 @@ public class AddressBookCreationTests extends TestBase {
                                     .withLastName(lastName)
                                     .withAddress(address)
                                     .withPhone(phone)
-                                    .withEmail(email));
+                                    .withEmail(email)
+                                    .withId("")
+                                    .withPhoto(""));
                         }
                     }
                 }
@@ -35,14 +38,16 @@ public class AddressBookCreationTests extends TestBase {
                     .withLastName(randomString(i + 5))
                     .withAddress(randomString(i + 5))
                     .withPhone(randomString(i + 5))
-                    .withEmail(randomString(i + 5)));
+                    .withEmail(randomString(i + 5))
+                    .withId("")
+                    .withPhoto(""));
         }
         return result;
     }
 
     public static List<ContactData> negativeContactProvider() {
         var result = new ArrayList<ContactData>(List.of(
-                new ContactData("", "First Name'", "Last Name", "", "", "")
+                new ContactData("", "First Name'", "Last Name", "", "", "", "" )
         ));
         return result;
     }
@@ -73,5 +78,14 @@ public class AddressBookCreationTests extends TestBase {
         app.contacts().createContact(contact);
         var newContacts = app.contacts().getList();
         Assertions.assertEquals(newContacts, oldContacts);
+    }
+
+    @Test
+    void canCreateContact() {
+        var contact = new ContactData()
+                .withFirstName(randomString(10))
+                .withLastName(randomString(10))
+                .withPhoto("src/test/resources/images/avatar.png");
+        app.contacts().createContact(contact);
     }
 }
