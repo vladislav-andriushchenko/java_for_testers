@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import static ru.stqa.addressbook.tests.TestBase.randomFile;
+
 public class Generator {
 
     @Parameter(names = {"--type", "-t"})
@@ -80,7 +82,8 @@ public class Generator {
                     .withLastName(CommonFunctions.randomString(i + 5))
                     .withAddress(CommonFunctions.randomString(i + 5))
                     .withPhone(CommonFunctions.randomString(i + 5))
-                    .withEmail(CommonFunctions.randomString(i + 5)));
+                    .withEmail(CommonFunctions.randomString(i + 5))
+                    .withPhoto(randomFile("src/test/resources/images")));
         }
         return result;
     }

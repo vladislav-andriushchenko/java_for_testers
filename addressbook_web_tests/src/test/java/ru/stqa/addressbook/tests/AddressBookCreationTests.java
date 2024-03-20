@@ -65,7 +65,8 @@ public class AddressBookCreationTests extends TestBase {
         expectedList.add(contact.withId(newContacts.get(newContacts.size() - 1).id())
                 .withPhone("")
                 .withAddress("")
-                .withEmail(""));
+                .withEmail("")
+                .withPhoto(""));
         expectedList.sort(compareById);
         Assertions.assertEquals(newContacts, expectedList);
     }
