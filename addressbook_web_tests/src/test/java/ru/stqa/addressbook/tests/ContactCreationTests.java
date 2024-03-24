@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.ContactData;
+import ru.stqa.addressbook.model.GroupData;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class AddressBookCreationTests extends TestBase {
+public class ContactCreationTests extends TestBase {
 
     public static List<ContactData> contactProvider() throws IOException {
         var result = new ArrayList<ContactData>();
@@ -54,9 +55,9 @@ public class AddressBookCreationTests extends TestBase {
     @ParameterizedTest
     @MethodSource("contactProvider")
     public void canCreateMultipleContacts(ContactData contact) {
-        var oldContacts = app.contacts().getList();
-        app.contacts().createContact(contact);
-        var newContacts = app.contacts().getList();
+        var oldContacts = app.hmb().getContactList();
+        app.hmb().createContact(contact);
+        var newContacts = app.hmb().getContactList();
         Comparator<ContactData> compareById = (o1, o2) -> {
             return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
         };
@@ -87,5 +88,21 @@ public class AddressBookCreationTests extends TestBase {
                 .withLastName(CommonFunctions.randomString(10))
                 .withPhoto(randomFile("src/test/resources/images"));
         app.contacts().createContact(contact);
+    }
+
+    @Test
+    void canCreateContactInGroup() {
+        var contact = new ContactData()
+                .withFirstName(CommonFunctions.randomString(10))
+                .withLastName(CommonFunctions.randomString(10))
+                .withPhoto(randomFile("src/test/resources/images"));
+        if (app.hmb().getGroupCount() == 0) {
+            app.hmb().createGroup(new GroupData("", "name", "header", "footer"));
+        }
+        var group = app.hmb().getGroupList().get(0);
+        var oldRelated = app.hmb().getContactsInGroup(group);
+        app.contacts().createContact(contact, group);
+        var newRelated = app.hmb().getContactsInGroup(group);
+        Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
     }
 }

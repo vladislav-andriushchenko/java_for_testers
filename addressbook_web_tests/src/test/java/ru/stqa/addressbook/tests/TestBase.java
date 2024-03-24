@@ -1,10 +1,10 @@
 package ru.stqa.addressbook.tests;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import ru.stqa.addressbook.manager.ApplicationManager;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -23,6 +23,11 @@ public class TestBase {
             app = new ApplicationManager();
             app.init(System.getProperty("browser", "chrome"), properties);
         }
+    }
+
+    @AfterEach
+    void checkDataBaseConsistency() {
+        app.jdbc().checkConsistency();
     }
 
     public static String randomFile(String dir) {

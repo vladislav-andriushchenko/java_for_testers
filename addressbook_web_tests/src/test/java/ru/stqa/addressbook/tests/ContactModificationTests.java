@@ -1,14 +1,14 @@
 package ru.stqa.addressbook.tests;
 
-import ru.stqa.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.stqa.addressbook.model.ContactData;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
-public class AddressBookModificationTests extends TestBase {
+public class ContactModificationTests extends TestBase {
 
     @Test
     void canModifyContact() {
