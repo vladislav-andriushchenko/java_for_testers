@@ -62,7 +62,7 @@ public class ContactHelper extends HelperBase {
     }
 
     private void selectInitialContact(ContactData contact) {
-        click(By.xpath(String.format("//a[contains(@href, \"%s\")]//*[@title=\"Edit\"]", contact.id())));
+        click(By.xpath(String.format("//a[@href='edit.php?id=%s']", contact.id())));
     }
 
     private void openHomePage() {

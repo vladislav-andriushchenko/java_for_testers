@@ -56,7 +56,7 @@ public class ContactCreationTests extends TestBase {
     @MethodSource("contactProvider")
     public void canCreateMultipleContacts(ContactData contact) {
         var oldContacts = app.hmb().getContactList();
-        app.hmb().createContact(contact);
+        app.contacts().createContact(contact);
         var newContacts = app.hmb().getContactList();
         Comparator<ContactData> compareById = (o1, o2) -> {
             return Integer.compare(Integer.parseInt(o1.id()), Integer.parseInt(o2.id()));
@@ -64,9 +64,6 @@ public class ContactCreationTests extends TestBase {
         newContacts.sort(compareById);
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.add(contact.withId(newContacts.get(newContacts.size() - 1).id())
-                .withPhone("")
-                .withAddress("")
-                .withEmail("")
                 .withPhoto(""));
         expectedList.sort(compareById);
         Assertions.assertEquals(newContacts, expectedList);
@@ -74,7 +71,7 @@ public class ContactCreationTests extends TestBase {
 
     @ParameterizedTest
     @MethodSource("negativeContactProvider")
-    public void cannotCreateContacts(ContactData contact) {
+    public void cannotCreateContactsUI(ContactData contact) {
         var oldContacts = app.contacts().getList();
         app.contacts().createContact(contact);
         var newContacts = app.contacts().getList();

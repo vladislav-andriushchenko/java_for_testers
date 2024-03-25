@@ -3,6 +3,7 @@ package ru.stqa.addressbook.manager.hbm;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Date;
 

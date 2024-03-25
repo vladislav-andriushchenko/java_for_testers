@@ -1,8 +1,8 @@
 package ru.stqa.addressbook.tests;
 
+import ru.stqa.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import ru.stqa.addressbook.model.ContactData;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -12,15 +12,20 @@ public class ContactModificationTests extends TestBase {
 
     @Test
     void canModifyContact() {
-        if (app.contacts().getCount() == 0) {
+        if (app.hmb().getContactCount() == 0) {
             app.contacts().createContact(new ContactData("", "firstName", "lastName", "Address", "14882280", "test@test.test", ""));
         }
-        var oldContacts = app.contacts().getList();
+        var oldContacts = app.hmb().getContactList();
         var rnd = new Random();
         var index = rnd.nextInt(oldContacts.size());
-        var testData = new ContactData().withFirstName("modified firstName").withLastName("modified lastName");
+        var testData = new ContactData()
+                .withFirstName("modified firstName")
+                .withLastName("modified lastName")
+                .withAddress("modified address")
+                .withPhone("111222333")
+                .withEmail("modifiedemail@test.ru");
         app.contacts().modifyContact(oldContacts.get(index), testData);
-        var newContacts = app.contacts().getList();
+        var newContacts = app.hmb().getContactList();
         var expectedList = new ArrayList<>(oldContacts);
         expectedList.set(index, testData.withId(oldContacts.get(index).id()));
         Comparator<ContactData> compareById = (o1, o2) -> {
