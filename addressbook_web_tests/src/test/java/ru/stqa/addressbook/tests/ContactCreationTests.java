@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public class ContactCreationTests extends TestBase {
 
@@ -102,4 +103,32 @@ public class ContactCreationTests extends TestBase {
         var newRelated = app.hmb().getContactsInGroup(group);
         Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
     }
+
+    @Test
+    void canCreateContactInGroupUI() {
+        var contact = new ContactData()
+                .withFirstName(CommonFunctions.randomString(10))
+                .withLastName(CommonFunctions.randomString(10))
+                .withPhoto(randomFile("src/test/resources/images"));
+        if (app.hmb().getContactCount() == 0) {
+            app.contacts().createContact(contact);
+        }
+
+        if (app.hmb().getGroupCount() == 0) {
+            app.hmb().createGroup(new GroupData("", "name", "header", "footer"));
+        }
+
+        var group = app.hmb().getGroupList().get(0);
+        var oldRelated = app.hmb().getContactsInGroup(group);
+
+
+        var oldContacts = app.hmb().getContactList();
+        var rnd = new Random();
+        var index = rnd.nextInt(oldContacts.size());
+
+        app.contacts().addContactToGroup(oldContacts.get(index));
+        var newRelated = app.hmb().getContactsInGroup(group);
+        Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
+    }
 }
+
