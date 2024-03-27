@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: io.opentelemetry:opentelemetry-api-events:1.35.0-alpha" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.opentelemetry" artifactId="opentelemetry-api-events" version="1.35.0-alpha" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.opentelemetry/opentelemetry-api-events/1.35.0-alpha/51c942e6d5da03fd4d144ac48320028956193689/opentelemetry-api-events-1.35.0-alpha.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.opentelemetry/opentelemetry-api-events/1.35.0-alpha/443713223b1b1b953dc1a1817ee31cce314d1280/opentelemetry-api-events-1.35.0-alpha-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
