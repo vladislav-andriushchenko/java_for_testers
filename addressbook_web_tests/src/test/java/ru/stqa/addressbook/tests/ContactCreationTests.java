@@ -120,22 +120,17 @@ public class ContactCreationTests extends TestBase {
         var currentContactList = app.hmb().getContactList();
         var group = app.hmb().getGroupList().get(0);
         List<ContactData> contactsInGroup = app.hmb().getContactsInGroup(group);
-        var result = new ArrayList<ContactData>();
+
 
         if (currentContactList.size() == contactsInGroup.size()) {
             app.contacts().createContact(contact, new GroupData().withName(CommonFunctions.randomString(10)));
-        } else {
-            for (int i = 0; i < contactsInGroup.size(); i++) {
-                var contactInContactList = currentContactList.get(i);
-                var contactInGroup = contactsInGroup.get(i);
-                if (!contactInContactList.id().equals(contactInGroup.id())) {
-                    result.add(contactInContactList);
-                    break;
-                }
-            }
-            app.contacts().addContactToGroup(result.get(0));
-            var newRelated = app.hmb().getContactsInGroup(group);
-            Assertions.assertEquals(contactsInGroup.size() + 1, newRelated.size());
         }
+
+        var result = app.contacts().findContactWithoutGroup(currentContactList, contactsInGroup);
+
+        app.contacts().addContactToGroup(result.get(0));
+        var newRelated = app.hmb().getContactsInGroup(group);
+        Assertions.assertEquals(contactsInGroup.size() + 1, newRelated.size());
+
     }
 }

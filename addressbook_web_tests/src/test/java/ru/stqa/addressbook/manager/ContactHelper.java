@@ -144,4 +144,17 @@ public class ContactHelper extends HelperBase {
         selectContact(contact);
         removeSelectedContactsFromGroup();
     }
+
+    public ArrayList<ContactData> findContactWithoutGroup(List<ContactData> allContacts, List<ContactData> contactsInGroup) {
+        var result = new ArrayList<ContactData>();
+        for (int i = 0; i < contactsInGroup.size(); i++) {
+            var contactInContactList = allContacts.get(i);
+            var contactInGroup = contactsInGroup.get(i);
+            if (!contactInContactList.id().equals(contactInGroup.id())) {
+                result.add(contactInContactList);
+                break;
+            }
+        }
+        return result;
+    }
 }
