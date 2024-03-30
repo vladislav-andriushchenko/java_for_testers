@@ -8,8 +8,8 @@ import ru.stqa.addressbook.manager.hbm.GroupRecord;
 import ru.stqa.addressbook.model.ContactData;
 import ru.stqa.addressbook.model.GroupData;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HibernateHelper extends HelperBase {
 
@@ -44,19 +44,11 @@ public class HibernateHelper extends HelperBase {
     }
 
     static List<GroupData> convertGroupList(List<GroupRecord> records) {
-        List<GroupData> result = new ArrayList<>();
-        for (var record : records) {
-            result.add(convert(record));
-        }
-        return result;
+        return records.stream().map(HibernateHelper::convert).collect(Collectors.toList());
     }
 
     public List<ContactData> convertContactList(List<ContactRecord> records) {
-        List<ContactData> result = new ArrayList<>();
-        for (var record : records) {
-            result.add(convert(record));
-        }
-        return result;
+        return records.stream().map(HibernateHelper::convert).collect(Collectors.toList());
     }
 
     private static GroupData convert(GroupRecord record) {
@@ -68,8 +60,13 @@ public class HibernateHelper extends HelperBase {
                 .withFirstName(record.firstname)
                 .withLastName(record.lastname)
                 .withAddress(record.address)
-                .withPhone(record.mobile)
-                .withEmail(record.email);
+                .withMobile(record.mobile)
+                .withEmail(record.email)
+                .withHome(record.home)
+                .withWork(record.work)
+                .withSecondary(record.phone2)
+                .withEmail2(record.email2)
+                .withEmail3(record.email3);
     }
 
     private static GroupRecord convert(GroupData data) {
@@ -85,7 +82,7 @@ public class HibernateHelper extends HelperBase {
         if ("".equals(id)) {
             id = "0";
         }
-        return new ContactRecord(Integer.parseInt(id), data.firstName(), data.lastName(), data.address(), data.phone(), data.email());
+        return new ContactRecord(Integer.parseInt(id), data.firstName(), data.lastName(), data.address(), data.mobile(), data.email());
     }
 
     public List<GroupData> getGroupList() {

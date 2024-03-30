@@ -13,17 +13,16 @@ public class ContactRecord {
 
     @Id
     public int id;
-
     public String firstname;
-
     public String lastname;
-
     public String address;
-
     public String mobile;
-
     public String email;
-
+    public String home;
+    public String work;
+    public String phone2;
+    public String email2;
+    public String email3;
 
     public Date deprecated = new Date();
 
