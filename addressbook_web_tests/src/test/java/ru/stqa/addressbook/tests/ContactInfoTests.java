@@ -2,6 +2,7 @@ package ru.stqa.addressbook.tests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.stqa.addressbook.common.CommonFunctions;
 import ru.stqa.addressbook.model.ContactData;
 
 import java.util.stream.Collectors;
@@ -24,7 +25,17 @@ public class ContactInfoTests extends TestBase {
 
     @Test
     void testContactDataHome() {
+        var contactData = new ContactData()
+                .withFirstName(CommonFunctions.randomString(10))
+                .withLastName(CommonFunctions.randomString(10))
+                .withPhoto(randomFile("src/test/resources/images"));
+
         var contacts = app.hmb().getContactList();
+
+        if (app.hmb().getContactCount() == 0) {
+            app.contacts().createContact(contactData);
+        }
+
         var phones = app.contacts().getPhones();
         var addresses = app.contacts().getAddresses();
         var emails = app.contacts().getEmails();
