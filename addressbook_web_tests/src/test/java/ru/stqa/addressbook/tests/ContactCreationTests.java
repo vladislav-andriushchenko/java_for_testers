@@ -114,23 +114,26 @@ public class ContactCreationTests extends TestBase {
         }
 
         if (app.hmb().getGroupCount() == 0) {
-            app.hmb().createGroup(new GroupData("", "name", "header", "footer"));
+            app.hmb().createGroup(new GroupData().withName(CommonFunctions.randomString(10)));
         }
 
-        var currentContactList = app.hmb().getContactList();
         var group = app.hmb().getGroupList().get(0);
         List<ContactData> contactsInGroup = app.hmb().getContactsInGroup(group);
 
+        if (contactsInGroup.isEmpty()) {
+            app.contacts().createContact(contact, group);
 
-        if (currentContactList.size() == contactsInGroup.size()) {
-            app.contacts().createContact(contact, new GroupData().withName(CommonFunctions.randomString(10)));
+        } else {
+            var currentContactList = app.hmb().getContactList();
+            if (currentContactList.size() == contactsInGroup.size()) {
+                app.contacts().createContact(contact);
+            }
+            var result = app.contacts().findContactWithoutGroup(currentContactList, contactsInGroup);
+            app.contacts().addContactToGroup(result.get(0), group);
+
         }
 
-        var result = app.contacts().findContactWithoutGroup(currentContactList, contactsInGroup);
-
-        app.contacts().addContactToGroup(result.get(0));
         var newRelated = app.hmb().getContactsInGroup(group);
         Assertions.assertEquals(contactsInGroup.size() + 1, newRelated.size());
-
     }
 }
