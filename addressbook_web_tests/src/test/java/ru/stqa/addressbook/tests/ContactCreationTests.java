@@ -122,16 +122,13 @@ public class ContactCreationTests extends TestBase {
 
         if (contactsInGroup.isEmpty()) {
             app.contacts().createContact(contact, group);
-
-        } else {
-            var currentContactList = app.hmb().getContactList();
-            if (currentContactList.size() == contactsInGroup.size()) {
-                app.contacts().createContact(contact);
-            }
-            var result = app.contacts().findContactWithoutGroup(currentContactList, contactsInGroup);
-            app.contacts().addContactToGroup(result.get(0), group);
-
+            contactsInGroup = app.hmb().getContactsInGroup(group);
         }
+
+        var currentContactList = app.hmb().getContactList();
+        var result = app.contacts().findContactWithoutGroup(currentContactList, contactsInGroup);
+
+        app.contacts().addContactToGroup(result.get(0), group);
 
         var newRelated = app.hmb().getContactsInGroup(group);
         Assertions.assertEquals(contactsInGroup.size() + 1, newRelated.size());

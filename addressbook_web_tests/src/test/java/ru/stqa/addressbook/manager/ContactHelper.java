@@ -29,7 +29,7 @@ public class ContactHelper extends HelperBase {
     public void addContactToGroup(ContactData contact, GroupData group) {
         openHomePage();
         selectContact(contact);
-        selectGroupFromDropDownList(group);
+        selectGroupFromLowDropDownList(group);
         AddContactToGroup();
     }
 
@@ -45,9 +45,14 @@ public class ContactHelper extends HelperBase {
         new Select(manager.driver.findElement(By.name("new_group"))).selectByValue(group.id());
     }
 
-    private void selectGroupFromDropDownList(GroupData group) {
-        new Select(manager.driver.findElement(By.name("group"))).selectByVisibleText(group.name());
+    private void selectGroupFromTopDropDownList(GroupData group) {
+        new Select(manager.driver.findElement(By.name("group"))).selectByValue(group.id());
     }
+
+    private void selectGroupFromLowDropDownList(GroupData group) {
+        new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
+    }
+
 
     public void removeContact(ContactData contact) {
         openHomePage();
@@ -146,7 +151,7 @@ public class ContactHelper extends HelperBase {
 
     public void removeContactFromGroup(GroupData group, ContactData contact) {
         openHomePage();
-        selectGroupFromDropDownList(group);
+        selectGroupFromTopDropDownList(group);
         selectContact(contact);
         removeSelectedContactsFromGroup();
     }
