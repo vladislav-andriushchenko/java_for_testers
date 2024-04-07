@@ -105,32 +105,33 @@ public class ContactCreationTests extends TestBase {
 
     @Test
     void canCreateContactInGroupUI() {
-        var contact = new ContactData()
+        var contactData = new ContactData()
                 .withFirstName(CommonFunctions.randomString(10))
                 .withLastName(CommonFunctions.randomString(10))
                 .withPhoto(randomFile("src/test/resources/images"));
         if (app.hmb().getContactCount() == 0) {
-            app.contacts().createContact(contact);
+            app.contacts().createContact(contactData);
         }
 
         if (app.hmb().getGroupCount() == 0) {
             app.hmb().createGroup(new GroupData().withName(CommonFunctions.randomString(10)));
         }
 
-        var group = app.hmb().getGroupList().get(0);
-        List<ContactData> contactsInGroup = app.hmb().getContactsInGroup(group);
+        var allGroups = app.hmb().getGroupList();
+        var contact = app.hmb().getContactList().get(0);
+        var groupsForContact = app.hmb().getGroupsOfSelectedContact(contact);
 
-        if (contactsInGroup.isEmpty()) {
-            app.contacts().createContact(contact, group);
-            contactsInGroup = app.hmb().getContactsInGroup(group);
+        if (!groupsForContact.isEmpty()) {
+            allGroups.removeAll(groupsForContact);
+            if (allGroups.isEmpty()) {
+                app.hmb().createGroup(new GroupData().withName(CommonFunctions.randomString(10)));
+            }
         }
 
-        var currentContactList = app.hmb().getContactList();
-        var result = app.contacts().findContactWithoutGroup(currentContactList, contactsInGroup);
-
-        app.contacts().addContactToGroup(result.get(0), group);
-
+        var group = allGroups.get(0);
+        var oldRelated = app.hmb().getContactsInGroup(group);
+        app.contacts().addContactToGroup(contact, group);
         var newRelated = app.hmb().getContactsInGroup(group);
-        Assertions.assertEquals(contactsInGroup.size() + 1, newRelated.size());
+        Assertions.assertEquals(oldRelated.size() + 1, newRelated.size());
     }
 }
