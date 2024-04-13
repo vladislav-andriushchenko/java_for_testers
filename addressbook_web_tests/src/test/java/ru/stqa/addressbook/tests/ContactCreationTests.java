@@ -125,6 +125,8 @@ public class ContactCreationTests extends TestBase {
             allGroups.removeAll(groupsForContact);
             if (allGroups.isEmpty()) {
                 app.hmb().createGroup(new GroupData().withName(CommonFunctions.randomString(10)));
+                allGroups = app.hmb().getGroupList();
+                allGroups.removeAll(groupsForContact);
             }
         }
 
