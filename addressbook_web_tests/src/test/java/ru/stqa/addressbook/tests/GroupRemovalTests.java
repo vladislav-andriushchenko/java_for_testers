@@ -1,5 +1,6 @@
 package ru.stqa.addressbook.tests;
 
+import io.qameta.allure.Allure;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.stqa.addressbook.model.GroupData;
@@ -10,9 +11,12 @@ import java.util.Random;
 public class GroupRemovalTests extends TestBase {
     @Test
     public void canRemoveGroup() {
-        if (app.hmb().getGroupCount() == 0) {
-            app.hmb().createGroup(new GroupData("", "name", "header", "footer"));
-        }
+        Allure.step("Checking preconditions", step -> {
+            if (app.hmb().getGroupCount() == 0) {
+                app.hmb().createGroup(new GroupData("", "name", "header", "footer"));
+            }
+        });
+
         var oldGroups = app.hmb().getGroupList();
         var rnd = new Random();
         var index = rnd.nextInt(oldGroups.size());
@@ -20,7 +24,9 @@ public class GroupRemovalTests extends TestBase {
         var newGroups = app.hmb().getGroupList();
         var expectedList = new ArrayList<>(oldGroups);
         expectedList.remove(index);
-        Assertions.assertEquals(newGroups, expectedList);
+        Allure.step("Validating result", step -> {
+            Assertions.assertEquals(newGroups, expectedList);
+        });
     }
 
     @Test
