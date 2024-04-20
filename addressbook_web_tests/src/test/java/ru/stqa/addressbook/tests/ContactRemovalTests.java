@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class ContactRemovalTests extends TestBase {
     @Test
-    public void canRemoveAddressBook() {
+    public void canRemoveContact() {
         var contact = new ContactData()
                 .withFirstName(CommonFunctions.randomString(10))
                 .withLastName(CommonFunctions.randomString(10))

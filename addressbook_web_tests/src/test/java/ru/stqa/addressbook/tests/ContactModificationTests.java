@@ -24,7 +24,8 @@ public class ContactModificationTests extends TestBase {
                 .withLastName(CommonFunctions.randomString(5))
                 .withAddress(CommonFunctions.randomString(5))
                 .withMobile(CommonFunctions.randomString(5))
-                .withEmail(CommonFunctions.randomString(5));
+                .withEmail(CommonFunctions.randomString(5))
+                .withPhoto(randomFile("src/test/resources/images"));
         app.contacts().modifyContact(oldContacts.get(index), testData);
         var newContacts = app.hmb().getContactList();
         var expectedList = new ArrayList<>(oldContacts);
