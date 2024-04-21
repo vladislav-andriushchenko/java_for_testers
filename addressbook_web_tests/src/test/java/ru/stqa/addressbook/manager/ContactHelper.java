@@ -126,7 +126,6 @@ public class ContactHelper extends HelperBase {
 
     public void removeAllContacts() {
         openHomePage();
-        selectAllOption();
         selectAllContacts();
         removeSelectedContacts();
     }
