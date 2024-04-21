@@ -53,9 +53,14 @@ public class ContactHelper extends HelperBase {
         new Select(manager.driver.findElement(By.name("to_group"))).selectByValue(group.id());
     }
 
+    private void selectAllOption() {
+        new Select(manager.driver.findElement(By.name("group"))).selectByIndex(1);
+    }
+
 
     public void removeContact(ContactData contact) {
         openHomePage();
+        selectAllOption();
         selectContact(contact);
         removeSelectedContacts();
         openHomePage();
